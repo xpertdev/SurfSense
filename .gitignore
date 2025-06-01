@@ -1,2 +1,4 @@
-.flashrank_cache*
-podcasts/
+.DS_Store
+*.log
+node_modules/
+__pycache__/
