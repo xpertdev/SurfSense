@@ -1,50 +1,29 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
   db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: your_postgres_user
-      POSTGRES_PASSWORD: your_postgres_password
-      POSTGRES_DB: surfsense_db
+    image: ankane/pgvector:latest
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    networks:
-      - surfsense-network
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-surfsense}
 
-  # Backend Service (FastAPI)
-  backend:
-    build:
-      context: ./backend
+  pgadmin:
+    image: dpage/pgadmin4
     ports:
-      - "8000:8000"
-    env_file:
-      - ./backend/.env
+      - "${PGADMIN_PORT:-5050}:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@surfsense.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD:-surfsense}
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
     depends_on:
       - db
-    # privileged: true #when backend is pointing to the hostmaschine with localhost or 127.0.0.1 you need to add privileged: true else the container points at itself
-    networks:
-      - surfsense-network
 
-  # Frontend Service (Next.js)
-  frontend:
-    build:
-      context: ./SurfSense-Frontend
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./SurfSense-Frontend/.env
-    networks:
-      - surfsense-network
-
-# Volumes for persistent storage
 volumes:
   postgres_data:
-
-# Docker network
-networks:
-  surfsense-network:
-    driver: bridge
+  pgadmin_data: 

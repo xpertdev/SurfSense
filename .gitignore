@@ -1,25 +1,2 @@
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-data/
-.data
-
-__pycache__
-__pycache__/
-.__pycache__
-
-backend/examples
-
-backend/old
-backend/RAGAgent
-backend/testfiles
-backend/.env
-
-vectorstores/*
-vectorstores/
-.vectorstores
+.flashrank_cache*
+podcasts/
